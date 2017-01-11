@@ -32,6 +32,9 @@ describe Oystercard do
     it "has no journeys by default" do
       expect(oystercard.journeys).to be_empty
     end
+    it "has no current journey" do
+      expect(oystercard.current_journey).to be_nil
+    end
   end
 
   describe "#top_up" do
