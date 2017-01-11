@@ -1,16 +1,16 @@
 require 'oystercard'
-
+require 'journey'
 
 
 describe Oystercard do
 
   subject(:oystercard) { described_class.new }
-  minb = Oystercard::MIN_BALANCE
-  amount = 10
-  fare = 5
+  fare = Oystercard::MIN_FARE
+  amount = fare + 10
 
   let(:entry_station) {double :victoria}
   let(:exit_station) {double :euston}
+  let(:journey) { instance_double("Journey") }
 
   db = Oystercard::DEFAULT_BALANCE
   limit = Oystercard::LIMIT
@@ -46,14 +46,14 @@ describe Oystercard do
 
   describe "#in_journey?" do
     before(:each) do
-      oystercard.top_up(minb)
+      oystercard.top_up(amount)
       oystercard.touch_in(entry_station)
     end
     it "changes to true when touched in" do
       expect(oystercard).to be_in_journey
     end
     it "changes to false when touched out" do
-      oystercard.touch_out(fare, exit_station)
+      oystercard.touch_out(exit_station)
       expect(oystercard).not_to be_in_journey
     end
   end
@@ -65,41 +65,39 @@ describe Oystercard do
       expect{ oystercard.touch_in(entry_station) }.to raise_error(error)
     end
     it "remembers which station the card touched in" do
-    oystercard.top_up(amount)
-    oystercard.touch_in(entry_station)
-    expect(oystercard.entry_station).to eq entry_station
-  end
+      oystercard.top_up(amount)
+      oystercard.touch_in(entry_station)
+      expect(oystercard.entry_station).to eq entry_station
+    end
+    it 'creates a journey upon touch-in' do
+      oystercard.top_up(amount)
+      oystercard.touch_in(entry_station)
+      expect(oystercard.current_journey).to be_a Journey
+    end
   end
 
   describe "#touch_out" do
     before(:each) do
-      oystercard.top_up(minb)
+      oystercard.top_up(amount)
       oystercard.touch_in(entry_station)
     end
-    it { should respond_to(:touch_out).with(2).argument }
     it "deducts the correct fare after the journey" do
-      expect{oystercard.touch_out(fare, exit_station)}.to change{oystercard.balance}.by -fare
+      expect{oystercard.touch_out(exit_station)}.to change{oystercard.balance}.by -fare
     end
     it "forgets the entry station" do
-      oystercard.touch_out(fare, exit_station)
+      oystercard.touch_out(exit_station)
       expect(oystercard.entry_station).to be_nil
     end
   end
 
-  describe "#journey_log" do
+  describe "#log_journey" do
       before(:each) do
-        oystercard.top_up(minb)
+        oystercard.top_up(amount)
         oystercard.touch_in(entry_station)
-        oystercard.touch_out(2, exit_station)
       end
-      it "has the entry station" do
-        expect(oystercard.journeys[0][:entry_station]).to eq(entry_station)
-      end
-      it "has the exit station" do
-        expect(oystercard.journeys[0][:exit_station]).to eq(exit_station)
-      end
-      it "stores entry & exit stations as one journey" do
-        expect(oystercard.journeys[0]).to include(:entry_station, :exit_station)
+      it 'logs finished journey' do
+        expect{oystercard.touch_out(exit_station)}.to change{oystercard.journeys.count}.by 1
+        expect(oystercard.journeys[-1]).to be_a Journey
       end
   end
 end
