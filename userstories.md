@@ -43,6 +43,11 @@ In order to know where I have been
 As a customer
 I want to see to all my previous trips
 
+###User Story 10###
+In order to know how far I have travelled
+As a customer
+I want to know what zone a station is in
+
 
 ###Functional Representation###
 Object | Message?
@@ -56,6 +61,7 @@ card | min_balance
 card | correct_amount_deducted
 card | entry_station
 card | journey_log
+station | zone
 
 ###Nouns & Verbs###
 noun | verb

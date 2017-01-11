@@ -1,3 +1,5 @@
+require_relative 'station'
+
 class Oystercard
 attr_reader :balance, :entry_station, :journeys
 
@@ -44,10 +46,6 @@ attr_reader :balance, :entry_station, :journeys
     @journeys << journey
   end
 
-  def number
-    i = @journeys.count + 1
-    journey + i
-  end
 
 private
 
