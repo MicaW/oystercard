@@ -14,4 +14,4 @@ The oystercard needs to remember the entry station of the current journey. Test 
 
 The user wants to see a log of previous journeys made. IRB: os.top_up(5), os.touch_in('station'), os.touch_out(2), os.journey_log
 
-The user wants to see which zone their station in. 
+The user wants to see which zone their station in. To do this we need to create a Station

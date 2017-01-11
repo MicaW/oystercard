@@ -19,21 +19,20 @@ attr_reader :balance, :entry_station, :journeys, :current_journey
   end
 
   def in_journey?
-    !@entry_station.nil?
+    !@current_journey.nil?
   end
 
   def touch_in(entry_station)
     raise "Insufficient funds" if balance < MIN_FARE
     create_journey(entry_station)
-    @entry_station = entry_station
     total_balance
   end
 
   def touch_out(exit_station)
     deduct
     log_journey
-    @entry_station = nil
     total_balance
+    @current_journey = nil
   end
 
   def total_balance
