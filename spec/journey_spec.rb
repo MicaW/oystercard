@@ -17,4 +17,15 @@ describe Journey do
     expect(journey.entry_station).to eq entry_station
   end
 
+  describe "#fare" do
+    it { is_expected.to respond_to(:fare) }
+    it "charges a penalty when user touches in, but doesn't touch out" do
+    expect(journey.fare).to
+    end
+
+    it "charges a penalty when user touches out, but hasn't touched in" do
+
+    end
+  end
+
 end

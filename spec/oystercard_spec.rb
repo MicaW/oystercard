@@ -5,7 +5,7 @@ require 'journey'
 describe Oystercard do
 
   subject(:oystercard) { described_class.new }
-  fare = Oystercard::MIN_FARE
+  fare = Journey::MIN_FARE
   amount = fare + 10
 
   let(:entry_station) {double :victoria}
@@ -95,4 +95,5 @@ describe Oystercard do
         expect(oystercard.journeys[-1]).to be_a Journey
       end
   end
+
 end
