@@ -19,7 +19,6 @@ describe Oystercard do
     end
     it "balance will not exceed £#{limit}" do
       error = "£#{limit} limit reached"
-      allow(oystercard).to receive(:balance).and_return(0)
       expect {oystercard.top_up(limit) }.to raise_error(error)
     end
   end
@@ -84,19 +83,19 @@ describe Oystercard do
       oystercard.top_up(minb)
       oystercard.touch_in(entry_station)
       oystercard.touch_out(2, exit_station)
-      expect(oystercard.journeys[0][:Entry_Station]).to eq(entry_station)
+      expect(oystercard.journeys[0][:entry_station]).to eq(entry_station)
     end
     it "has the exit station" do
       oystercard.top_up(minb)
       oystercard.touch_in(entry_station)
       oystercard.touch_out(2, exit_station)
-      expect(oystercard.journeys[0][:Exit_Station]).to eq(exit_station)
+      expect(oystercard.journeys[0][:exit_station]).to eq(exit_station)
     end
     it "stores entry & exit stations as one journey" do
       oystercard.top_up(minb)
       oystercard.touch_in(entry_station)
       oystercard.touch_out(2, exit_station)
-      expect(oystercard.journeys[0]).to include(:Entry_Station, :Exit_Station)
+      expect(oystercard.journeys[0]).to include(:entry_station, :exit_station)
     end
   end
 end
